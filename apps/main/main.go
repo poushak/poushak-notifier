@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/sirupsen/logrus"
 	ft "github.com/x-cray/logrus-prefixed-formatter"
 
@@ -24,6 +27,11 @@ func main() {
 	if err != nil {
 		l.Fatalf("Error in generating config: %s", err)
 	}
+
+	// this is dummy server to listen for http probes on gcp
+	go func() {
+		fmt.Println(http.ListenAndServe("0.0.0.0:8080", nil))
+	}()
 
 	f := factory.NewFactory(l, conf)
 	l.Infof("Running notifier server version: %s", Version)
